@@ -1,8 +1,8 @@
 const allowedCors = [
-  "http://project.mesto.nomoredomains.monster",
-  "https://project.mesto.nomoredomains.monster",
-  "http://api.project.mesto.nomoredomains.monster",
-  "https://api.project.mesto.nomoredomains.monster",
+  "http://moviepoisk.nomoredomains.monster",
+  "https://moviepoisk.nomoredomains.monster",
+  "http://moviespoisk.nomoredomains.monster",
+  "https://moviespoisk.nomoredomains.monster",
   "localhost:3000",
   "http://localhost:3000",
   "http://localhost:3001",
