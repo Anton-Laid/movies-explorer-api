@@ -1,25 +1,18 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const validator = require("validator");
 
 const movieShema = new mongoose.Schema({
   country: {
     type: String,
     require: true,
-    maxlength: 30,
-    minlength: 2,
   },
   director: {
     type: String,
     require: true,
-    maxlength: 30,
-    minlength: 2,
   },
   duration: {
     type: Number,
     require: true,
-    maxlength: 30,
-    minlength: 2,
   },
   year: {
     type: String,
@@ -28,34 +21,26 @@ const movieShema = new mongoose.Schema({
   description: {
     type: String,
     require: true,
-    maxlength: 30,
-    minlength: 2,
   },
   image: {
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return /(:?(?:https?:\/\/)?(?:www\.)?)?[-a-z0-9]+\.\w/gi.test(v);
-      },
+      validator: (v) => validator.isURL(v),
     },
   },
-  trailerLink: {
+  trailer: {
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return /(:?(?:https?:\/\/)?(?:www\.)?)?[-a-z0-9]+\.\w/gi.test(v);
-      },
+      validator: (v) => validator.isURL(v),
     },
   },
   thumbnail: {
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return /(:?(?:https?:\/\/)?(?:www\.)?)?[-a-z0-9]+\.\w/gi.test(v);
-      },
+      validator: (v) => validator.isURL(v),
     },
   },
   owner: {
@@ -64,20 +49,17 @@ const movieShema = new mongoose.Schema({
     required: true,
   },
   movieId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "movie",
+    type: "Number",
     required: true,
   },
   nameRU: {
     type: String,
     require: true,
-    maxlength: 30,
-    minlength: 2,
   },
   nameEN: {
     type: String,
     require: true,
-    maxlength: 30,
-    minlength: 2,
   },
 });
+
+module.exports = mongoose.model("movie", movieShema);

@@ -1,13 +1,14 @@
 const router = require("express").Router();
+const {
+  getCards,
+  createMovies,
+  deleteMovie,
+} = require("../controllers/movies");
 
-router.get("/", (req, res) => {
-  res.send("get movie");
-});
-router.post("/", (req, res) => {
-  res.send("post movie");
-});
-router.delete("/:_id", (req, res) => {
-  res.send("del movie");
-});
+const { validateCreateMovies } = require("../validators/movies");
+
+router.get("/", getCards);
+router.post("/", validateCreateMovies, createMovies);
+router.delete("/:movieId", deleteMovie);
 
 module.exports = router;

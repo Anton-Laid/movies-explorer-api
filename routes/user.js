@@ -1,10 +1,8 @@
 const router = require("express").Router();
+const { getCurrentUser, updataUser } = require("../controllers/users");
+const { profileValidator } = require("../validators/users");
 
-router.get("/me", (req, res) => {
-  res.send("get user");
-});
-router.patch("/me", (req, res) => {
-  res.send("pathc user");
-});
+router.get("/me", getCurrentUser);
+router.patch("/me", profileValidator, updataUser);
 
 module.exports = router;
