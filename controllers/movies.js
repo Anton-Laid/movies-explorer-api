@@ -51,7 +51,9 @@ const deleteMovie = (req, res, next) => {
       const idOwner = movie.owner.toString();
 
       if (UserId === idOwner) {
-        Movies.deleteOne({ _id: movie.id }).then((movie) => res.status(STATUS_OK).send(movie));
+        Movies.deleteOne({ _id: movie.id }).then((movie) =>
+          res.status(STATUS_OK).send(movie)
+        );
       } else {
         next(new ForbiddenError(MSG_NOT_YOUR_OWN_CARD));
       }
