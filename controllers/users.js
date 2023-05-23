@@ -20,16 +20,20 @@ const createUsers = (req, res, next) => {
 
   return bcrypt
     .hash(password, 10)
-    .then((hash) => User.create({
-      name,
-      email,
-      password: hash,
-    }))
-    .then((user) => res.status(STATUS_CREATED).send({
-      name: user.name,
-      about: user.about,
-      _id: user.id,
-    }))
+    .then((hash) =>
+      User.create({
+        name,
+        email,
+        password: hash,
+      })
+    )
+    .then((user) =>
+      res.status(STATUS_CREATED).send({
+        name: user.name,
+        about: user.about,
+        _id: user.id,
+      })
+    )
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError("Пользователь уже зарегистрирован"));
@@ -51,7 +55,7 @@ const login = (req, res, next) => {
         NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
         {
           expiresIn: "7d",
-        },
+        }
       );
 
       res.send({ token });
@@ -78,7 +82,7 @@ const updataUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, email },
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   )
     .then((user) => {
       if (!user) {

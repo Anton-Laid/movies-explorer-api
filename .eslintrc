@@ -6,6 +6,9 @@
     "no-shadow": "off",
     "quotes": ["error", "double"],
     "consistent-return": "off",
-    "func-names": "off"
+    "func-names": "off",
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off",
+    "comma-dangle": "off"
   }
 }
