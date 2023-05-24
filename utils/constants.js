@@ -11,7 +11,6 @@ const VALIDATION_ERROR = "ValidationError";
 const CAST_ERROR = "CastError";
 
 const MSG_REGISTERED_USER_EMAIL = "Пользователь уже зарегистрирован";
-const MSG_INVALID_USER_DATA = "Переданы некорректные данные пользователя";
 const MSG_UPDATE_USERS_DATA = "Невозможно обновить данные пользователя";
 const MSG_USER_UNAUTHORIZED = "Неверная почта или пароль";
 const MSG_INVALID_CARD_DATA = "Фильм не найден";
@@ -34,7 +33,6 @@ module.exports = {
   LINK_PATTERN,
   ERROR_SERVER,
   MSG_REGISTERED_USER_EMAIL,
-  MSG_INVALID_USER_DATA,
   MSG_UPDATE_USERS_DATA,
   MSG_USER_UNAUTHORIZED,
   VALIDATION_ERROR,
