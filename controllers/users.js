@@ -100,7 +100,7 @@ const updataUser = (req, res, next) => {
       });
     })
     .catch((error) => {
-      if (error.code === USER_NOT_UNIQUE_ERROR) {
+      if (error.code === 11000) {
         next(new ConflictError(MSG_EMAIL_DUPLICATION));
       }
       if (error.name === VALIDATION_ERROR) {
