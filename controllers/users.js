@@ -106,7 +106,7 @@ const updataUser = (req, res, next) => {
       if (error.name === VALIDATION_ERROR) {
         return next(new BadRequestError(MSG_INVALID_DATA));
       }
-      return next(error);
+      // return next(error);
     });
 };
 
