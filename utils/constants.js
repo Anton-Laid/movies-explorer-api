@@ -1,14 +1,15 @@
 const STATUS_OK = 200;
 const STATUS_CREATED = 201;
 const ERROR_SERVER = 500;
+const USER_NOT_UNIQUE_ERROR = 11000;
 
 const OBJECT_ID_PATTERN = /^[0-9a-fA-F]{24}$/;
-const LINK_PATTERN = /https?:\/\/(www\.)?[\w-@:%.\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([\w-.~:/[?%#@!\]$&'()*+,;=]*)/;
+const LINK_PATTERN =
+  /https?:\/\/(www\.)?[\w-@:%.\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([\w-.~:/[?%#@!\]$&'()*+,;=]*)/;
 
 const VALIDATION_ERROR = "ValidationError";
 const CAST_ERROR = "CastError";
 
-const MSG_PROFILE_NOT_FOUND = "Пользователь не найден";
 const MSG_REGISTERED_USER_EMAIL = "Пользователь уже зарегистрирован";
 const MSG_INVALID_USER_DATA = "Переданы некорректные данные пользователя";
 const MSG_UPDATE_USERS_DATA = "Невозможно обновить данные пользователя";
@@ -22,6 +23,9 @@ const MSG_DEFAULT = "На сервере произошла ошибка";
 const MSG_INVALID_MAIL_FORMAT = "Неверный формат почтового адреса";
 const MSG_AUTHORIZATION_REQUIRED = "Необходима авторизация";
 const MSG_NOT_YOUR_OWN_CARD = "Вы не мажите удалить не свой фильм";
+const MSG_INVALID_DATA = "Переданы некорректные данные пользователя";
+const MSG_EMAIL_DUPLICATION = "Такая почта уже зарегистрирована";
+const MSG_SERVER_NOW_FELL = "Сервер сейчас упадёт";
 
 module.exports = {
   STATUS_OK,
@@ -29,7 +33,6 @@ module.exports = {
   OBJECT_ID_PATTERN,
   LINK_PATTERN,
   ERROR_SERVER,
-  MSG_PROFILE_NOT_FOUND,
   MSG_REGISTERED_USER_EMAIL,
   MSG_INVALID_USER_DATA,
   MSG_UPDATE_USERS_DATA,
@@ -45,4 +48,8 @@ module.exports = {
   MSG_INVALID_MAIL_FORMAT,
   MSG_AUTHORIZATION_REQUIRED,
   MSG_NOT_YOUR_OWN_CARD,
+  MSG_INVALID_DATA,
+  USER_NOT_UNIQUE_ERROR,
+  MSG_EMAIL_DUPLICATION,
+  MSG_SERVER_NOW_FELL,
 };

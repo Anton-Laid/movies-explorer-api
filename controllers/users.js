@@ -7,7 +7,10 @@ const {
   MSG_USER_UNAUTHORIZED,
   VALIDATION_ERROR,
   STATUS_OK,
-  MSG_UPDATE_USERS_DATA,
+  MSG_INVALID_DATA,
+  USER_NOT_UNIQUE_ERROR,
+  MSG_EMAIL_DUPLICATION,
+  MSG_REGISTERED_USER_EMAIL,
 } = require("../utils/constants");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
@@ -35,11 +38,11 @@ const createUsers = (req, res, next) => {
       })
     )
     .catch((err) => {
-      if (err.code === 11000) {
-        next(new ConflictError("Пользователь уже зарегистрирован"));
+      if (err.code === USER_NOT_UNIQUE_ERROR) {
+        next(new ConflictError(MSG_REGISTERED_USER_EMAIL));
       }
       if (err.code === VALIDATION_ERROR) {
-        next(new BadRequestError("Переданы некорректные данные пользователя"));
+        next(new BadRequestError(MSG_INVALID_DATA));
       }
       next(err);
     });
@@ -60,7 +63,10 @@ const login = (req, res, next) => {
 
       res.send({ token });
     })
-    .catch(() => next(new UnauthorizedError(MSG_USER_UNAUTHORIZED)));
+    .catch(() => {
+      throw new UnauthorizedError(MSG_USER_UNAUTHORIZED);
+    })
+    .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
@@ -95,10 +101,17 @@ const updataUser = (req, res, next) => {
     })
     .catch((error) => {
       if (error.name === VALIDATION_ERROR) {
-        next(new BadRequestError(MSG_UPDATE_USERS_DATA));
+        next(new BadRequestError(MSG_INVALID_DATA));
+      }
+      if (error.code === USER_NOT_UNIQUE_ERROR) {
+        next(new ConflictError(MSG_EMAIL_DUPLICATION));
       }
       next(error);
     });
+};
+
+const logout = (req, res) => {
+  res.clearCookie("jwt", { httpOnly: true }).status(STATUS_OK).end();
 };
 
 module.exports = {
@@ -106,4 +119,5 @@ module.exports = {
   login,
   getCurrentUser,
   updataUser,
+  logout,
 };

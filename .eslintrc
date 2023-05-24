@@ -9,6 +9,8 @@
     "func-names": "off",
     "implicit-arrow-linebreak": "off",
     "function-paren-newline": "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "operator-linebreak": "off",
+    "import/no-extraneous-dependencies": "off"
   }
 }

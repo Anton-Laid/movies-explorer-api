@@ -1,4 +1,5 @@
 const express = require("express");
+const helmet = require("helmet");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -6,15 +7,13 @@ const { errors } = require("celebrate");
 const route = require("./routes/index");
 const cors = require("./middlewares/cors");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-const NotFoundError = require("./errors/NotFoundError");
-const {
-  ERROR_SERVER,
-  MSG_PAGE_NOT_FOUND,
-  MSG_DEFAULT,
-} = require("./utils/constants");
+const { MSG_SERVER_NOW_FELL } = require("./utils/constants");
+const errorHandler = require("./middlewares/errorHandler");
+const { limiter } = require("./middlewares/rateLimit");
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV } = process.env;
 const app = express();
+app.use(helmet());
 
 mongoose.connect("mongodb://127.0.0.1:27017/movies");
 
@@ -24,27 +23,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 app.use(cors);
 
+if (NODE_ENV === "production") {
+  app.use(limiter);
+}
 app.get("/crash-test", () => {
   setTimeout(() => {
-    throw new Error("Сервер сейчас упадёт");
+    throw new Error(MSG_SERVER_NOW_FELL);
   }, 0);
 });
 
 app.use(route);
 
-app.use((req, res, next) => {
-  next(new NotFoundError(MSG_PAGE_NOT_FOUND));
-});
-
 app.use(errorLogger);
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = ERROR_SERVER, message } = err;
-
-  res.status(statusCode).send({
-    message: statusCode === ERROR_SERVER ? MSG_DEFAULT : message,
-  });
-});
+app.use(errorHandler);
 
 app.listen(PORT);

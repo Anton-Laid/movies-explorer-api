@@ -12,14 +12,11 @@ const {
   MSG_NOT_YOUR_OWN_CARD,
 } = require("../utils/constants");
 
-const getCards = (req, res, next) => {
+const getMovies = (req, res, next) => {
   const owner = req.user._id;
 
   Movies.find({ owner })
     .then((movies) => res.status(STATUS_OK).send(movies))
-    .catch(() => {
-      throw new NotFoundError(MSG_INCORRECT_DATA);
-    })
     .catch(next);
 };
 
@@ -62,7 +59,7 @@ const deleteMovie = (req, res, next) => {
 };
 
 module.exports = {
-  getCards,
+  getMovies,
   createMovies,
   deleteMovie,
 };
