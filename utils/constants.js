@@ -21,12 +21,20 @@ const MSG_PAGE_NOT_FOUND = "Страница не найтена";
 const MSG_DEFAULT = "На сервере произошла ошибка";
 const MSG_INVALID_MAIL_FORMAT = "Неверный формат почтового адреса";
 const MSG_AUTHORIZATION_REQUIRED = "Необходима авторизация";
-const MSG_NOT_YOUR_OWN_CARD = "Вы не мажите удалить не свой фильм";
+const MSG_NOT_YOUR_OWN_CARD = "У вас нет прав на удаление этого фильма";
 const MSG_INVALID_DATA = "Переданы некорректные данные пользователя";
 const MSG_EMAIL_DUPLICATION = "Такая почта уже зарегистрирована";
 const MSG_SERVER_NOW_FELL = "Сервер сейчас упадёт";
+const MSG_REQUESTED_USER_NOT_FOUND = "Запрашиваемый пользователь не найден";
+const MSG_MOVIE_DELETE = "Фильм удален";
+const MSG_AUTHORIZATION_OK = "Вы успешно авторизовались";
+const MSG_EXIT_USER = "Вы вышли из аккаунта";
 
 module.exports = {
+  MSG_EXIT_USER,
+  MSG_AUTHORIZATION_OK,
+  MSG_MOVIE_DELETE,
+  MSG_REQUESTED_USER_NOT_FOUND,
   STATUS_OK,
   STATUS_CREATED,
   OBJECT_ID_PATTERN,

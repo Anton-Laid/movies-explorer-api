@@ -11,7 +11,9 @@ const { logout } = require("../controllers/users");
 
 router.post("/signup", signupValidator, createUsers);
 router.post("/signin", signinValidator, login);
+
 router.use(auth);
+
 router.use("/users", user);
 router.use("/movies", movies);
 

@@ -9,6 +9,7 @@ const {
   MSG_INVALID_CARD_DATA,
   MSG_INCORRECT_DATA,
   STATUS_OK,
+  MSG_MOVIE_DELETE,
   MSG_NOT_YOUR_OWN_CARD,
 } = require("../utils/constants");
 
@@ -47,12 +48,14 @@ const deleteMovie = (req, res, next) => {
       if (!movie) next(new NotFoundError(MSG_INVALID_CARD_DATA));
       const idOwner = movie.owner.toString();
 
+      if (UserId !== idOwner) {
+        throw new ForbiddenError(MSG_NOT_YOUR_OWN_CARD);
+      }
+
       if (UserId === idOwner) {
-        Movies.deleteOne({ _id: movie.id }).then((movie) =>
-          res.status(STATUS_OK).send(movie)
+        Movies.deleteOne({ _id: movie.id }).then(() =>
+          res.status(STATUS_OK).send({ message: MSG_MOVIE_DELETE })
         );
-      } else {
-        next(new ForbiddenError(MSG_NOT_YOUR_OWN_CARD));
       }
     })
     .catch(next);

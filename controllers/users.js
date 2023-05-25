@@ -2,16 +2,17 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../modules/user");
 const {
-  STATUS_CREATED,
-  MSG_PROFILE_NOT_FOUND,
-  MSG_USER_UNAUTHORIZED,
-  VALIDATION_ERROR,
   STATUS_OK,
+  STATUS_CREATED,
+  VALIDATION_ERROR,
   MSG_INVALID_DATA,
   USER_NOT_UNIQUE_ERROR,
   MSG_EMAIL_DUPLICATION,
   MSG_REGISTERED_USER_EMAIL,
-  MSG_INVALID_USER_DATA,
+  MSG_REQUESTED_USER_NOT_FOUND,
+  MSG_AUTHORIZATION_OK,
+  MSG_USER_UNAUTHORIZED,
+  MSG_EXIT_USER,
 } = require("../utils/constants");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
@@ -52,20 +53,29 @@ const createUsers = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  return User.findUserByCredentials(email, password)
+  User.findOne({ email })
+    .select("+password")
+    .orFail(new UnauthorizedError(MSG_USER_UNAUTHORIZED))
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
-        {
-          expiresIn: "7d",
+      bcrypt.compare(password, user.password).then((matched) => {
+        if (!matched) {
+          next(new UnauthorizedError(MSG_USER_UNAUTHORIZED));
+        } else {
+          const token = jwt.sign(
+            { _id: user._id },
+            NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
+            { expiresIn: "7d" }
+          );
+          res
+            .cookie("jwt", token, {
+              maxAge: 3600000 * 24 * 7,
+              httpOnly: true,
+              sameSite: "None",
+              secure: true,
+            })
+            .send({ message: MSG_AUTHORIZATION_OK });
         }
-      );
-
-      res.send({ token });
-    })
-    .catch(() => {
-      throw new UnauthorizedError(MSG_USER_UNAUTHORIZED);
+      });
     })
     .catch(next);
 };
@@ -93,7 +103,7 @@ const updataUser = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(MSG_PROFILE_NOT_FOUND);
+        throw new NotFoundError(MSG_REQUESTED_USER_NOT_FOUND);
       }
       return res.status(STATUS_OK).send({
         name: user.name,
@@ -105,14 +115,22 @@ const updataUser = (req, res, next) => {
         return next(new ConflictError(MSG_EMAIL_DUPLICATION));
       }
       if (error.name === VALIDATION_ERROR) {
-        return next(new BadRequestError(MSG_INVALID_USER_DATA));
+        return next(new BadRequestError(MSG_INVALID_DATA));
       }
       return next(error);
     });
 };
 
 const logout = (req, res) => {
-  res.clearCookie("jwt", { httpOnly: true }).status(STATUS_OK).end();
+  res
+    .clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    })
+    .status(STATUS_OK)
+    .send({ message: MSG_EXIT_USER })
+    .end();
 };
 
 module.exports = {
