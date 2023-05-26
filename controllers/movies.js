@@ -43,9 +43,23 @@ const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   const UserId = req.user._id;
 
+  // Movies.findById(movieId)
+  //   .orFail(new NotFoundError(MSG_INVALID_CARD_DATA))
+  //   .then((movie) => {
+  //     if (String(movie.owner) !== UserId) {
+  //       return Promise.reject(new ForbiddenError(MSG_NOT_YOUR_OWN_CARD));
+  //     }
+  //     return movie;
+  //   })
+  //   .then(() =>
+  //     Movies.deleteOne({ _id: movieId }).orFail(
+  //       new NotFoundError(MSG_INVALID_CARD_DATA)
+  //     )
+  //     .then(() res.status(STATUS_OK).send({message: }))
+  //   )
   Movies.findById(movieId)
+    .orFail(new NotFoundError(MSG_INVALID_CARD_DATA))
     .then((movie) => {
-      if (!movie) next(new NotFoundError(MSG_INVALID_CARD_DATA));
       const idOwner = movie.owner.toString();
 
       if (UserId !== idOwner) {
