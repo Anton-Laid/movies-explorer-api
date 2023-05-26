@@ -53,29 +53,21 @@ const createUsers = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
-    .select("+password")
-    .orFail(new UnauthorizedError(MSG_USER_UNAUTHORIZED))
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      bcrypt.compare(password, user.password).then((matched) => {
-        if (!matched) {
-          next(new UnauthorizedError(MSG_USER_UNAUTHORIZED));
-        } else {
-          const token = jwt.sign(
-            { _id: user._id },
-            NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
-            { expiresIn: "7d" }
-          );
-          res
-            .cookie("jwt", token, {
-              maxAge: 3600000 * 24 * 7,
-              httpOnly: true,
-              sameSite: "None",
-              secure: true,
-            })
-            .send({ message: MSG_AUTHORIZATION_OK });
-        }
+      const token = jwt.sign({ _id: user._id }, "jwt_secret", {
+        expiresIn: "7d",
       });
+
+      res
+        .cookie("token", token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+          sameSite: "none",
+          secure: NODE_ENV === "production",
+        })
+        .status(STATUS_OK)
+        .send({ token });
     })
     .catch(next);
 };
@@ -90,7 +82,7 @@ const getCurrentUser = (req, res, next) => {
         email: user.email,
       });
     })
-    .catch((error) => next(error));
+    .catch(next);
 };
 
 const updataUser = (req, res, next) => {
@@ -123,7 +115,7 @@ const updataUser = (req, res, next) => {
 
 const logout = (req, res) => {
   res
-    .clearCookie("jwt", {
+    .clearCookie("token", {
       httpOnly: true,
       sameSite: "none",
       secure: true,

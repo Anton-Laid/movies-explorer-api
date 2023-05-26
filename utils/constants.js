@@ -19,7 +19,6 @@ const MSG_FORBIDDEN = "Невозможно удалить фильм";
 const MSG_INVALID_LINK_FORMAT = "Неверный формат ссылки";
 const MSG_PAGE_NOT_FOUND = "Страница не найтена";
 const MSG_DEFAULT = "На сервере произошла ошибка";
-const MSG_INVALID_MAIL_FORMAT = "Неверный формат почтового адреса";
 const MSG_AUTHORIZATION_REQUIRED = "Необходима авторизация";
 const MSG_NOT_YOUR_OWN_CARD = "У вас нет прав на удаление этого фильма";
 const MSG_INVALID_DATA = "Переданы некорректные данные пользователя";
@@ -29,8 +28,10 @@ const MSG_REQUESTED_USER_NOT_FOUND = "Запрашиваемый пользов�
 const MSG_MOVIE_DELETE = "Фильм удален";
 const MSG_AUTHORIZATION_OK = "Вы успешно авторизовались";
 const MSG_EXIT_USER = "Вы вышли из аккаунта";
+const MSG_TOKEN_NOT_TEST = "токен не прошел проверку";
 
 module.exports = {
+  MSG_TOKEN_NOT_TEST,
   MSG_EXIT_USER,
   MSG_AUTHORIZATION_OK,
   MSG_MOVIE_DELETE,
@@ -51,7 +52,6 @@ module.exports = {
   MSG_INVALID_LINK_FORMAT,
   MSG_PAGE_NOT_FOUND,
   MSG_DEFAULT,
-  MSG_INVALID_MAIL_FORMAT,
   MSG_AUTHORIZATION_REQUIRED,
   MSG_NOT_YOUR_OWN_CARD,
   MSG_INVALID_DATA,

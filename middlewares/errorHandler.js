@@ -1,10 +1,12 @@
 const { ERROR_SERVER, MSG_DEFAULT } = require("../utils/constants");
 
-module.exports = (err, req, res, next) => {
-  const { statusCode = ERROR_SERVER, message } = err;
+const errorHandler = (err, req, res, next) => {
+  const status = err.statusCode || 500;
+  const message =
+    err.statusCode === 500 ? "На сервере произошла ошибка" : err.message;
 
-  res.status(statusCode).send({
-    message: statusCode === ERROR_SERVER ? MSG_DEFAULT : message,
-  });
+  res.status(status).send({ message });
   next();
 };
+
+module.exports = errorHandler;

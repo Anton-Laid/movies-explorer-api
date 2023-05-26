@@ -3,6 +3,7 @@ const helmet = require("helmet");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const { errors } = require("celebrate");
 const route = require("./routes/index");
 const cors = require("./middlewares/cors");
@@ -17,6 +18,7 @@ app.use(helmet());
 
 mongoose.connect("mongodb://127.0.0.1:27017/movies");
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
