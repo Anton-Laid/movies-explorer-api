@@ -18,7 +18,7 @@ const getMovies = (req, res, next) => {
   const owner = req.user._id;
 
   Movies.find({ owner })
-    .then((movies) => res.status(STATUS_OK).send({ message: MSG_SAVE_MOVIE }))
+    .then((movies) => res.status(STATUS_OK).send(movies))
     .catch(next);
 };
 
@@ -28,7 +28,7 @@ const createMovies = (req, res, next) => {
     ...req.body,
   })
     .then((movie) => {
-      res.status(STATUS_CREATED).send(movie);
+      res.status(STATUS_CREATED).send({ message: MSG_SAVE_MOVIE });
     })
     .catch((error) => {
       if (error.name === VALIDATION_ERROR) {
