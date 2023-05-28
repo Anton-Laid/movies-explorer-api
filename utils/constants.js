@@ -28,9 +28,13 @@ const MSG_REQUESTED_USER_NOT_FOUND = "Запрашиваемый пользов�
 const MSG_MOVIE_DELETE = "Фильм удален";
 const MSG_AUTHORIZATION_OK = "Вы успешно авторизовались";
 const MSG_EXIT_USER = "Вы вышли из аккаунта";
-const MSG_TOKEN_NOT_TEST = "токен не прошел проверку";
+const MSG_TOKEN_NOT_TEST = "Tокен не прошел проверку";
+const MSG_USER_NOT_FOUND = "Пользователь не найден";
+const MSG_SAVE_MOVIE = "Фильм сохранен";
 
 module.exports = {
+  MSG_SAVE_MOVIE,
+  MSG_USER_NOT_FOUND,
   MSG_TOKEN_NOT_TEST,
   MSG_EXIT_USER,
   MSG_AUTHORIZATION_OK,
