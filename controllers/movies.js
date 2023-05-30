@@ -27,7 +27,8 @@ const createMovies = (req, res, next) => {
     owner: req.user._id,
     ...req.body,
   })
-    .then(() => {
+
+    .then((movie) => {
       res.status(STATUS_CREATED).send({ message: MSG_SAVE_MOVIE });
     })
     .catch((error) => {

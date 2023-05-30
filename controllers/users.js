@@ -16,6 +16,7 @@ const {
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const ConflictError = require("../errors/ConflictError");
+
 const { NODE_ENV, JWT_SECRET } = require("../utils/config");
 
 const createUsers = (req, res, next) => {
