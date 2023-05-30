@@ -11,12 +11,13 @@ const { requestLogger, errorLogger } = require("./middlewares/logger");
 const { MSG_SERVER_NOW_FELL } = require("./utils/constants");
 const errorHandler = require("./middlewares/errorHandler");
 const { limiter } = require("./middlewares/rateLimit");
+const { endpoint } = require("./utils/config");
 
 const { PORT = 3000, NODE_ENV } = process.env;
 const app = express();
 app.use(helmet());
 
-mongoose.connect("mongodb://127.0.0.1:27017/movies");
+mongoose.connect(endpoint);
 
 app.use(cookieParser());
 app.use(bodyParser.json());

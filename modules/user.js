@@ -5,6 +5,7 @@ const {
   MSG_USER_UNAUTHORIZED,
   MSG_INVALID_MAIL_FORMAT,
 } = require("../utils/constants");
+const UnauthorizedError = require("../errors/UnauthorizedError");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -29,10 +30,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    validate: {
-      validator: (v) => validator.isStrongPassword(v),
-      message: MSG_INVALID_MAIL_FORMAT,
-    },
+    select: false,
   },
 });
 
@@ -41,12 +39,12 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select("+password")
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error(MSG_USER_UNAUTHORIZED));
+        return Promise.reject(new UnauthorizedError(MSG_USER_UNAUTHORIZED));
       }
 
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          return Promise.reject(new Error(MSG_USER_UNAUTHORIZED));
+          return Promise.reject(new UnauthorizedError(MSG_USER_UNAUTHORIZED));
         }
 
         return user;

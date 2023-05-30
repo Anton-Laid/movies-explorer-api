@@ -10,15 +10,13 @@ const {
   MSG_EMAIL_DUPLICATION,
   MSG_REGISTERED_USER_EMAIL,
   MSG_REQUESTED_USER_NOT_FOUND,
-  MSG_AUTHORIZATION_OK,
-  MSG_USER_UNAUTHORIZED,
   MSG_EXIT_USER,
+  MSG_USER_NOT_FOUND,
 } = require("../utils/constants");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
-const UnauthorizedError = require("../errors/UnauthorizedError");
 const ConflictError = require("../errors/ConflictError");
-const { JWT_SECRET, NODE_ENV } = require("../utils/config");
+const { NODE_ENV, JWT_SECRET } = require("../utils/config");
 
 const createUsers = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -35,8 +33,8 @@ const createUsers = (req, res, next) => {
     .then((user) =>
       res.status(STATUS_CREATED).send({
         name: user.name,
-        about: user.about,
-        _id: user.id,
+        email: user.email,
+        _id: user._id,
       })
     )
     .catch((err) => {
@@ -55,19 +53,24 @@ const login = (req, res, next) => {
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, "jwt_secret", {
-        expiresIn: "7d",
-      });
-
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === "production" ? JWT_SECRET : "secret-key",
+        { expiresIn: "7d" }
+      );
       res
         .cookie("token", token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
-          sameSite: "none",
           secure: NODE_ENV === "production",
+          sameSite: false,
         })
         .status(STATUS_OK)
-        .send({ token });
+        .send({
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+        });
     })
     .catch(next);
 };
@@ -76,10 +79,12 @@ const getCurrentUser = (req, res, next) => {
   const users = req.user._id;
 
   User.findById(users)
+    .orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => {
       res.send({
         name: user.name,
         email: user.email,
+        id: user._id,
       });
     })
     .catch(next);

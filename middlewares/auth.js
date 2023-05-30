@@ -1,24 +1,23 @@
 const jwt = require("jsonwebtoken");
 const UnauthorizedError = require("../errors/UnauthorizedError");
-const {
-  MSG_AUTHORIZATION_REQUIRED,
-  MSG_TOKEN_NOT_TEST,
-} = require("../utils/constants");
+const { MSG_AUTHORIZATION_REQUIRED } = require("../utils/constants");
+const { NODE_ENV, JWT_SECRET } = require("../utils/config");
 
 module.exports = (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    throw new UnauthorizedError(MSG_AUTHORIZATION_REQUIRED);
+    return next(new UnauthorizedError(MSG_AUTHORIZATION_REQUIRED));
   }
 
-  let payload;
   try {
-    payload = jwt.verify(token, "jwt_secret");
-  } catch (err) {
-    throw new UnauthorizedError(MSG_TOKEN_NOT_TEST);
-  }
+    req.user = jwt.verify(
+      token,
+      NODE_ENV === "production" ? JWT_SECRET : "secret-key"
+    );
 
-  req.user = payload;
-  next();
+    next();
+  } catch (error) {
+    next(new UnauthorizedError(MSG_AUTHORIZATION_REQUIRED));
+  }
 };

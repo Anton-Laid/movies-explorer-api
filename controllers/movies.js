@@ -11,6 +11,7 @@ const {
   STATUS_OK,
   MSG_MOVIE_DELETE,
   MSG_NOT_YOUR_OWN_CARD,
+  MSG_SAVE_MOVIE,
 } = require("../utils/constants");
 
 const getMovies = (req, res, next) => {
@@ -22,14 +23,12 @@ const getMovies = (req, res, next) => {
 };
 
 const createMovies = (req, res, next) => {
-  const owner = req.user._id;
-
   Movies.create({
-    owner,
+    owner: req.user._id,
     ...req.body,
   })
-    .then((movie) => {
-      res.status(STATUS_CREATED).send(movie);
+    .then(() => {
+      res.status(STATUS_CREATED).send({ message: MSG_SAVE_MOVIE });
     })
     .catch((error) => {
       if (error.name === VALIDATION_ERROR) {
@@ -40,24 +39,10 @@ const createMovies = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  const { movieId } = req.params;
+  const { id } = req.params;
   const UserId = req.user._id;
 
-  // Movies.findById(movieId)
-  //   .orFail(new NotFoundError(MSG_INVALID_CARD_DATA))
-  //   .then((movie) => {
-  //     if (String(movie.owner) !== UserId) {
-  //       return Promise.reject(new ForbiddenError(MSG_NOT_YOUR_OWN_CARD));
-  //     }
-  //     return movie;
-  //   })
-  //   .then(() =>
-  //     Movies.deleteOne({ _id: movieId }).orFail(
-  //       new NotFoundError(MSG_INVALID_CARD_DATA)
-  //     )
-  //     .then(() res.status(STATUS_OK).send({message: }))
-  //   )
-  Movies.findById(movieId)
+  Movies.findById(id)
     .orFail(new NotFoundError(MSG_INVALID_CARD_DATA))
     .then((movie) => {
       const idOwner = movie.owner.toString();
@@ -67,9 +52,9 @@ const deleteMovie = (req, res, next) => {
       }
 
       if (UserId === idOwner) {
-        Movies.deleteOne({ _id: movie.id }).then(() =>
-          res.status(STATUS_OK).send({ message: MSG_MOVIE_DELETE })
-        );
+        Movies.deleteOne({ _id: movie.id })
+          .then(() => res.status(STATUS_OK).send({ message: MSG_MOVIE_DELETE }))
+          .catch(next);
       }
     })
     .catch(next);

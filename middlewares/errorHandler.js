@@ -1,5 +1,3 @@
-const { ERROR_SERVER, MSG_DEFAULT } = require("../utils/constants");
-
 const errorHandler = (err, req, res, next) => {
   const status = err.statusCode || 500;
   const message =
