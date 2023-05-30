@@ -31,6 +31,7 @@ const MSG_EXIT_USER = "Вы вышли из аккаунта";
 const MSG_TOKEN_NOT_TEST = "Tокен не прошел проверку";
 const MSG_USER_NOT_FOUND = "Пользователь не найден";
 const MSG_SAVE_MOVIE = "Фильм сохранен";
+const MSG_NOT_FOUND = "Запрашиваемый пользователь не найден";
 
 module.exports = {
   MSG_SAVE_MOVIE,
@@ -62,4 +63,5 @@ module.exports = {
   USER_NOT_UNIQUE_ERROR,
   MSG_EMAIL_DUPLICATION,
   MSG_SERVER_NOW_FELL,
+  MSG_NOT_FOUND,
 };
