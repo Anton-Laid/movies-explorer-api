@@ -11,6 +11,7 @@ const VALIDATION_ERROR = "ValidationError";
 const CAST_ERROR = "CastError";
 
 const MSG_REGISTERED_USER_EMAIL = "Пользователь уже зарегистрирован";
+const MSG_POSITIVE_REGISTERED = "Вы успешно зарегистрировались";
 const MSG_UPDATE_USERS_DATA = "Невозможно обновить данные пользователя";
 const MSG_USER_UNAUTHORIZED = "Неверная почта или пароль";
 const MSG_INVALID_CARD_DATA = "Фильм не найден";
@@ -34,6 +35,7 @@ const MSG_SAVE_MOVIE = "Фильм сохранен";
 const MSG_NOT_FOUND = "Запрашиваемый пользователь не найден";
 
 module.exports = {
+  MSG_POSITIVE_REGISTERED,
   MSG_SAVE_MOVIE,
   MSG_USER_NOT_FOUND,
   MSG_TOKEN_NOT_TEST,

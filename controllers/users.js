@@ -12,6 +12,7 @@ const {
   MSG_REQUESTED_USER_NOT_FOUND,
   MSG_EXIT_USER,
   MSG_USER_NOT_FOUND,
+  MSG_POSITIVE_REGISTERED,
 } = require("../utils/constants");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
@@ -32,11 +33,7 @@ const createUsers = (req, res, next) => {
       })
     )
     .then((user) =>
-      res.status(STATUS_CREATED).send({
-        name: user.name,
-        email: user.email,
-        _id: user._id,
-      })
+      res.status(STATUS_CREATED).send({ message: MSG_POSITIVE_REGISTERED })
     )
     .catch((err) => {
       if (err.code === USER_NOT_UNIQUE_ERROR) {
