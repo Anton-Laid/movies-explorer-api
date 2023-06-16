@@ -68,6 +68,7 @@ const login = (req, res, next) => {
           _id: user._id,
           email: user.email,
           name: user.name,
+          token,
         });
     })
     .catch(next);
