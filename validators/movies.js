@@ -9,7 +9,7 @@ module.exports.validateCreateMovies = celebrate({
     year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().required().pattern(LINK_PATTERN),
-    trailer: Joi.string().required().pattern(LINK_PATTERN),
+    trailerLink: Joi.string().required().pattern(LINK_PATTERN),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
     thumbnail: Joi.string().required().pattern(LINK_PATTERN),

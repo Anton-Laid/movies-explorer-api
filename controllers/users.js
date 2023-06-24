@@ -12,10 +12,12 @@ const {
   MSG_REQUESTED_USER_NOT_FOUND,
   MSG_EXIT_USER,
   MSG_USER_NOT_FOUND,
+  MSG_USER_UNAUTHORIZED,
 } = require("../utils/constants");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const ConflictError = require("../errors/ConflictError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
 
 const { NODE_ENV, JWT_SECRET } = require("../utils/config");
 
@@ -52,28 +54,15 @@ const createUsers = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === "production" ? JWT_SECRET : "secret-key",
-        { expiresIn: "7d" }
-      );
-      res
-        .cookie("token", token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          secure: NODE_ENV === "production",
-          sameSite: false,
-        })
-        .status(STATUS_OK)
-        .send({
-          _id: user._id,
-          email: user.email,
-          name: user.name,
-        });
+      const token = jwt.sign({ _id: user._id }, "super-strong-secret", {
+        expiresIn: "7d",
+      });
+
+      res.send({ token });
     })
-    .catch(next);
+    .catch(() => next(new UnauthorizedError(MSG_USER_UNAUTHORIZED)));
 };
 
 const getCurrentUser = (req, res, next) => {
