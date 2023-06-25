@@ -60,7 +60,7 @@ const login = (req, res, next) => {
         expiresIn: "7d",
       });
 
-      res.send({ token });
+      res.send({ name: user.name, email: user.email, token });
     })
     .catch(() => next(new UnauthorizedError(MSG_USER_UNAUTHORIZED)));
 };
