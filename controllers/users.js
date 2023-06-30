@@ -107,15 +107,7 @@ const updataUser = (req, res, next) => {
 };
 
 const logout = (req, res) => {
-  res
-    .clearCookie("token", {
-      httpOnly: true,
-      sameSite: "none",
-      secure: true,
-    })
-    .status(STATUS_OK)
-    .send({ message: MSG_EXIT_USER })
-    .end();
+  res.clearCookie("jwt").status(STATUS_OK).send({ message: MSG_EXIT_USER });
 };
 
 module.exports = {
