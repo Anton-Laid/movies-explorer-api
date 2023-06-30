@@ -19,8 +19,6 @@ const BadRequestError = require("../errors/BadRequestError");
 const ConflictError = require("../errors/ConflictError");
 const UnauthorizedError = require("../errors/UnauthorizedError");
 
-const { NODE_ENV, JWT_SECRET } = require("../utils/config");
-
 const createUsers = (req, res, next) => {
   const { name, email, password } = req.body;
 

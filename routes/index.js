@@ -17,7 +17,7 @@ router.use(auth);
 router.use("/users", user);
 router.use("/movies", movies);
 
-router.use("/signout", logout);
+router.post("/signout", logout);
 
 router.use((req, res, next) => {
   next(new NotFoundError(MSG_PAGE_NOT_FOUND));
