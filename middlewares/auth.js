@@ -4,17 +4,19 @@ const { MSG_AUTHORIZATION_REQUIRED } = require("../utils/constants");
 const { NODE_ENV, JWT_SECRET } = require("../utils/config");
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.jwt;
+  const { authorization } = req.headers;
+
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    throw new UnauthorizedError(MSG_AUTHORIZATION_REQUIRED);
+  }
+
+  const token = authorization.replace("Bearer ", "");
   let payload;
 
   try {
-    payload = jwt.verify(
-      token,
-      NODE_ENV === "production" ? JWT_SECRET : "dev-secret"
-    );
+    payload = jwt.verify(token, "super-strong-secret");
   } catch (err) {
-    next(new UnauthorizedError());
-    return;
+    return next(new UnauthorizedError(MSG_AUTHORIZATION_REQUIRED));
   }
 
   req.user = payload;
